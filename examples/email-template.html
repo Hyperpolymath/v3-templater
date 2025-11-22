@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ subject }}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 5px 5px 0 0;
+    }
+    .content {
+      background: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+    .order-item {
+      background: white;
+      margin: 10px 0;
+      padding: 15px;
+      border-left: 3px solid #4CAF50;
+    }
+    .total {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #4CAF50;
+      text-align: right;
+      margin-top: 20px;
+    }
+    .button {
+      display: inline-block;
+      background: #4CAF50;
+      color: white;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.9em;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>{{ company.name }}</h1>
+  </div>
+
+  <div class="content">
+    <h2>Hello {{ customer.name | capitalize }}!</h2>
+
+    {% if order.status == "confirmed" %}
+      <p>Thank you for your order! Your order has been confirmed and is being processed.</p>
+    {% elif order.status == "shipped" %}
+      <p>Great news! Your order has been shipped and is on its way to you.</p>
+    {% elif order.status == "delivered" %}
+      <p>Your order has been delivered. We hope you enjoy your purchase!</p>
+    {% endif %}
+
+    <h3>Order Details</h3>
+    <p><strong>Order Number:</strong> #{{ order.id }}</p>
+    <p><strong>Order Date:</strong> {{ order.date | date("locale") }}</p>
+
+    <h3>Items Ordered</h3>
+    {% for item in order.items %}
+      <div class="order-item">
+        <strong>{{ item.name }}</strong><br>
+        Quantity: {{ item.quantity }} × ${{ item.price | fixed(2) }}
+        = ${{ (item.quantity * item.price) | fixed(2) }}
+        {% if item.onSale %}
+          <span style="color: #e74c3c;">🔥 On Sale!</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="total">
+      Subtotal: ${{ order.subtotal | fixed(2) }}<br>
+      {% if order.discount > 0 %}
+        Discount: -${{ order.discount | fixed(2) }}<br>
+      {% endif %}
+      Shipping: ${{ order.shipping | fixed(2) }}<br>
+      <hr style="margin: 10px 0;">
+      Total: ${{ order.total | fixed(2) }}
+    </div>
+
+    {% if order.status == "shipped" %}
+      <p>
+        <strong>Tracking Number:</strong> {{ order.trackingNumber }}<br>
+        <a href="{{ order.trackingUrl }}" class="button">Track Your Order</a>
+      </p>
+    {% endif %}
+
+    {% if order.status == "delivered" %}
+      <p>
+        <a href="{{ company.reviewUrl }}" class="button">Leave a Review</a>
+      </p>
+    {% endif %}
+
+    <h3>Shipping Address</h3>
+    <p>
+      {{ customer.name }}<br>
+      {{ customer.address.street }}<br>
+      {{ customer.address.city }}, {{ customer.address.state }} {{ customer.address.zip }}<br>
+      {{ customer.address.country }}
+    </p>
+
+    {% if customer.phone %}
+      <p><strong>Phone:</strong> {{ customer.phone }}</p>
+    {% endif %}
+  </div>
+
+  <div class="footer">
+    <p>
+      Questions? Contact us at {{ company.email }} or {{ company.phone }}<br>
+      <a href="{{ company.website }}">Visit our website</a>
+    </p>
+    <p>
+      &copy; {{ "now" | date("year") }} {{ company.name }}. All rights reserved.
+    </p>
+  </div>
+</body>
+</html>

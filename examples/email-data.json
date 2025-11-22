@@ -1,0 +1,53 @@
+{
+  "subject": "Order Confirmation - Order #12345",
+  "company": {
+    "name": "Amazing Store",
+    "email": "support@amazingstore.com",
+    "phone": "1-800-555-0123",
+    "website": "https://amazingstore.com",
+    "reviewUrl": "https://amazingstore.com/review/12345"
+  },
+  "customer": {
+    "name": "john smith",
+    "email": "john@example.com",
+    "phone": "555-0123",
+    "address": {
+      "street": "123 Main Street",
+      "city": "Springfield",
+      "state": "IL",
+      "zip": "62701",
+      "country": "USA"
+    }
+  },
+  "order": {
+    "id": 12345,
+    "date": "2024-01-15T10:30:00Z",
+    "status": "shipped",
+    "trackingNumber": "1Z999AA10123456784",
+    "trackingUrl": "https://tracking.example.com/1Z999AA10123456784",
+    "items": [
+      {
+        "name": "Wireless Headphones",
+        "quantity": 1,
+        "price": 79.99,
+        "onSale": true
+      },
+      {
+        "name": "Phone Case",
+        "quantity": 2,
+        "price": 14.99,
+        "onSale": false
+      },
+      {
+        "name": "USB-C Cable (6ft)",
+        "quantity": 1,
+        "price": 12.99,
+        "onSale": false
+      }
+    ],
+    "subtotal": 122.96,
+    "discount": 12.30,
+    "shipping": 9.99,
+    "total": 120.65
+  }
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ dashboard.title }} - Analytics Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+    }
+    .header {
+      background: #1a1a2e;
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      font-size: 1.5em;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #4CAF50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+    .stat-card.success::before { background: #4CAF50; }
+    .stat-card.warning::before { background: #ff9800; }
+    .stat-card.danger::before { background: #f44336; }
+    .stat-card.info::before { background: #2196F3; }
+    .stat-label {
+      color: #666;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    .stat-value {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1a1a2e;
+    }
+    .stat-change {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    .stat-change.positive { color: #4CAF50; }
+    .stat-change.negative { color: #f44336; }
+    .chart-section {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .chart-section h2 {
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+    tr:hover {
+      background: #f9f9f9;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 500;
+    }
+    .status-active { background: #e8f5e9; color: #2e7d32; }
+    .status-pending { background: #fff3e0; color: #e65100; }
+    .status-inactive { background: #ffebee; color: #c62828; }
+    .progress-bar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+    .alert {
+      padding: 15px 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .alert-info { background: #e3f2fd; color: #1565c0; border-left: 4px solid #2196F3; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4CAF50; }
+    .alert-warning { background: #fff3e0; color: #e65100; border-left: 4px solid #ff9800; }
+    .alert-danger { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>{{ dashboard.title }}</h1>
+    <div class="user-info">
+      <div>
+        <div>{{ user.name }}</div>
+        <div style="font-size: 0.85em; opacity: 0.8;">{{ user.role | capitalize }}</div>
+      </div>
+      <div class="avatar">{{ user.name | slice(0, 1) | upper }}</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Alerts -->
+    {% if alerts %}
+      {% for alert in alerts %}
+        <div class="alert alert-{{ alert.type }}">
+          <strong>{{ alert.title }}</strong> - {{ alert.message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      {% for stat in stats %}
+        <div class="stat-card {{ stat.color }}">
+          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-value">{{ stat.value | number }}</div>
+          {% if stat.change %}
+            <div class="stat-change {{ stat.change > 0 ? 'positive' : 'negative' }}">
+              {{ stat.change > 0 ? '↑' : '↓' }}
+              {{ stat.change | abs | fixed(1) }}%
+              vs last period
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="chart-section">
+      <h2>Recent Activity</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for activity in recentActivity %}
+            <tr>
+              <td>{{ activity.user }}</td>
+              <td>{{ activity.action }}</td>
+              <td>
+                <span class="status-badge status-{{ activity.status }}">
+                  {{ activity.status | capitalize }}
+                </span>
+              </td>
+              <td>{{ activity.date | date("locale") }}</td>
+              <td>
+                {% if activity.progress %}
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ activity.progress }}%"></div>
+                  </div>
+                  {{ activity.progress }}%
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Top Products -->
+    {% if topProducts %}
+      <div class="chart-section">
+        <h2>Top Performing Products</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Sales</th>
+              <th>Revenue</th>
+              <th>Growth</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in topProducts %}
+              <tr>
+                <td>{{ loop.index1 }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.sales | number }}</td>
+                <td>${{ product.revenue | fixed(2) }}</td>
+                <td>
+                  <span class="stat-change {{ product.growth > 0 ? 'positive' : 'negative' }}">
+                    {{ product.growth > 0 ? '↑' : '↓' }}
+                    {{ product.growth | abs | fixed(1) }}%
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+
+    <!-- System Status -->
+    <div class="chart-section">
+      <h2>System Status</h2>
+      <div class="stats-grid">
+        {% for system in systemStatus %}
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <strong>{{ system.name }}</strong>
+              <span>{{ system.value }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: {{ system.value }}%; background: {{ system.value > 80 ? '#f44336' : '#4CAF50' }}"></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Generated on {{ "now" | date("iso") }}
+    console.log('Dashboard loaded for user: {{ user.name }}');
+  </script>
+</body>
+</html>

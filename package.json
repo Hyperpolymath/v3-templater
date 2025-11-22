@@ -1,0 +1,61 @@
+{
+  "name": "v3-templater",
+  "version": "1.0.0",
+  "description": "A modern, secure, and high-performance templating engine with rich features",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "v3t": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "benchmark": "node dist/benchmark.js",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "template",
+    "templating",
+    "template-engine",
+    "html",
+    "mustache",
+    "handlebars",
+    "ejs",
+    "view",
+    "rendering"
+  ],
+  "author": "v3-templater contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.2.0",
+    "prettier": "^3.0.0"
+  },
+  "dependencies": {
+    "he": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hyperpolymath/v3-templater.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}
