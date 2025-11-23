@@ -72,7 +72,7 @@ jobs:
       run: npm pack
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: release-artifacts
         path: |
