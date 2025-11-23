@@ -2,7 +2,7 @@
 # RSR PLATINUM: Container support for reproducible builds
 
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:25-alpine AS builder
 
 LABEL maintainer="v3-templater maintainers <maintainers@hyperpolymath.dev>"
 LABEL org.opencontainers.image.source="https://github.com/Hyperpolymath/v3-templater"
@@ -26,7 +26,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production
-FROM node:20-alpine
+FROM node:25-alpine
 
 # Add non-root user for security
 RUN addgroup -g 1001 -S v3t && \
