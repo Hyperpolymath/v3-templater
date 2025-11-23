@@ -194,7 +194,7 @@ jobs:
       run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json
 
     - name: Upload SBOM
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: sbom
         path: sbom.json
