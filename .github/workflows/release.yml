@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Use Node.js
       uses: actions/setup-node@v4
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Use Node.js
       uses: actions/setup-node@v4
@@ -72,7 +72,7 @@ jobs:
       run: npm pack
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: release-artifacts
         path: |
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Use Node.js
       uses: actions/setup-node@v4
@@ -163,7 +163,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -187,7 +187,7 @@ jobs:
           type=sha
 
     - name: Build and push
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         push: true
@@ -203,7 +203,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Deploy documentation
       run: |
